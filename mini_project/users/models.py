@@ -8,16 +8,16 @@ def user_directory_path(instance):
 
 
 class User(models.Model):
-    username = models.TextField(100)
+    username = models.TextField(max_length=100)
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
     bio = models.TextField()
     picture = models.ImageField(upload_to=user_directory_path)
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE(), primary_key=True)
-    follower = models.ForeignKey(User, on_delete=models.CASCADE)
-    following = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follows_to')
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_by')
