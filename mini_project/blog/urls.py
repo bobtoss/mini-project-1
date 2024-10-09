@@ -1,14 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import *
+from . import views
 
 urlpatterns = [
-    path('list_post', list_post),
-    path('get_post/<int:id>', get_post),
-    path('create_post', update_post),
-    path('update_post/<int:id>', update_post),
-    path('delete_post/<int:id>', delete_post),
-    path('get_comments/<int:id>', get_comments),
-    path('create_comment', create_comment),
-
+    path('', views.post_list, name='post_list'),
+    path('post/<int:post_id>/', views.post_detail, name='post_detail'),
+    path('post/new/', views.post_create, name='post_create'),
+    path('post/<int:post_id>/edit/', views.post_edit, name='post_edit'),
+    path('post/<int:post_id>/delete/', views.post_delete, name='post_delete'),
+    path('post/<int:post_id>/comment/', views.add_comment, name='add_comment'),
 ]
