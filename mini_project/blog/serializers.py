@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post
+from .models import Post, Comment
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -26,11 +26,11 @@ class CommentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
-        model = Post
+        model = Comment
         fields = '__all__'
 
     def create(self, validated_data):
-        instance = Post.objects.create(**validated_data)
+        instance = Comment.objects.create(**validated_data)
         return instance
 
     def update(self, instance, validated_data):
