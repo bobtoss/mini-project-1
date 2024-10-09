@@ -1,23 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
 def user_directory_path(instance):
     # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
-    return 'user_{0}'.format(instance.user.id)
-
-
-class User(models.Model):
-    username = models.TextField(max_length=100)
+    return 'profile_pictures/user_{0}'.format(instance.user.id)
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField()
-    picture = models.ImageField(upload_to=user_directory_path)
+    picture = models.ImageField(upload_to=user_directory_path,  null=True, blank=True)
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follows_to')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_by')
+    follower = models.ForeignKey(User, related_name='follower', on_delete=models.CASCADE)
+    following = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)

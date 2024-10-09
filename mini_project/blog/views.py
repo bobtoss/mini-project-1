@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from mini_project.blog.models import *
-from mini_project.blog.serializers import *
+from blog.models import Post, Comment
+from blog.serializers import *
 
 
 # Create your views herobjecte.
