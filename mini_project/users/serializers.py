@@ -50,7 +50,6 @@ class FollowSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        instance.user = validated_data.get('user')
         instance.follower = validated_data.get('follower')
         instance.following = validated_data.get('following')
         instance.save()

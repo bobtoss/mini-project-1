@@ -55,13 +55,12 @@ def update_user(request, id):
 
 
 def follow_user(request, user_id):
-    serializer = FollowSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
+    following_id = request.GET.get('following_id', None)
+    Follow.objects.create(follower__id=user_id, following__id=following_id)
 
 
 def unfollow_user(request, user_id, follow_id):
-    follow = Follow.object.filter(user__id=user_id, follower__id=follow_id)
+    follow = Follow.object.filter(follower_id=user_id, following__id=follow_id)
     follow.delete()
 
 
