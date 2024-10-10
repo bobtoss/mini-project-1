@@ -9,4 +9,5 @@ urlpatterns = [
     path('unfollow/<int:user_id>/', views.unfollow_user, name='unfollow_user'),
     path('login/', views.user_login),
     path('', views.base),
+    path('profile/create/', views.create_profile)
 ]

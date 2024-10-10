@@ -20,11 +20,10 @@
         {% csrf_token %}
 
         <h2>Account Information</h2>
-        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
 
         <button type="submit">Register</button>
     </form>
 
-    <p>Already have an account? <a href="users/login">Login here</a>.</p>
 </body>
 </html>

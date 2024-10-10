@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Profile, Follow
+from users.models import Profile, Follow
 from django.shortcuts import render, redirect, get_object_or_404
 from .serializers import *
 from django.contrib.auth.forms import UserCreationForm
@@ -7,24 +7,43 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from .forms import UserRegistrationForm, ProfileForm
 
 
 # Create your views here.
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/users/')
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration.html', {'form': form})
+        user_form = UserRegistrationForm(request.POST)
 
+        if user_form.is_valid():
+            # Save the user form and create the user
+            user = user_form.save()
+
+            login(request, user)
+            messages.success(request, f"Account created for {user.username}!")
+            return redirect('/users/')  # Redirect to some page after registration
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        user_form = UserRegistrationForm()
+
+    return render(request, 'registration.html', {'user_form': user_form})
+
+def create_profile(request):
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, request.FILES)
+
+        if profile_form.is_valid():
+            profile_form.save()  # Now save the profile
+            return redirect('/users/')  # Redirect to some page after registration
+    else:
+        profile_form = ProfileForm()
+    return render(request, 'create_profile.html', {'profile_form': profile_form})
 
 @login_required(login_url='users/login/')
 def profile(request, user_id):
-    profile = get_object_or_404(Profile, user_id=user_id)
+    profile = Profile.objects.get(user__id=user_id)
     return render(request, 'profile.html', {'profile': profile})
 
 
@@ -35,7 +54,7 @@ def update_user(request, id):
         serializer.save()
 
 
-def follow_user(request):
+def follow_user(request, user_id):
     serializer = FollowSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

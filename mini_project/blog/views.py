@@ -55,5 +55,6 @@ class comment(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, post_id):
-        comments = Comment.objects.filter(post__id=id)
-        return Response(comments)
+        comments = Comment.objects.filter(post__id=post_id)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
